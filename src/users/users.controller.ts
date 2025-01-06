@@ -1,39 +1,25 @@
 import {
   Controller,
   Post,
-  Get,
   Body,
+  UseFilters,
   BadRequestException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './schemas/user.schema';
+import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 
 @Controller('users')
+@UseFilters(new HttpExceptionFilter())
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-    if (!createUserDto.name || !createUserDto.email) {
-      throw new BadRequestException('Name and Email are required');
-    }
-    return await this.usersService.create(createUserDto);
-  }
-
-  @Get()
-  async getAllUsers(): Promise<User[]> {
+  @Post('register')
+  async register(@Body() createUserDto: CreateUserDto) {
     try {
-      return await this.usersService.findAll();
+      return await this.usersService.createUser(createUserDto);
     } catch (error) {
-      if (error instanceof BadRequestException) {
-        throw error;
-      } else {
-        throw new InternalServerErrorException(
-          error.message || 'Failed to fetch users',
-        );
-      }
+      throw new BadRequestException(error.message);
     }
   }
 }

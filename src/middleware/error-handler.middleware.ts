@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpException } from '@nestjs/common';
+import { MESSAGES } from '../common/utils/messages';
 
 export function errorHandler(
   err: any,
@@ -12,14 +13,14 @@ export function errorHandler(
     const status = err.getStatus();
     res.status(status).json({
       statusCode: status,
-      message: (response as any).message || 'Unexpected error occurred',
-      error: (response as any).error || 'Error',
+      message: (response as any).message || MESSAGES.unexpectedError,
+      error: (response as any).error || MESSAGES.error,
     });
   } else {
     res.status(500).json({
       statusCode: 500,
-      message: 'Internal server error',
-      error: 'Internal Server Error',
+      message: MESSAGES.serverError,
+      error: MESSAGES.serverError,
     });
   }
 }
