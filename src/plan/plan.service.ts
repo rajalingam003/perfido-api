@@ -7,6 +7,10 @@ import { Plan } from './plan.schema';
 export class PlanService {
   constructor(@InjectModel('Plan') private readonly planModel: Model<Plan>) {}
 
+  async getPlanById(planId: string): Promise<Plan> {
+    return this.planModel.findById(planId).exec();
+  }
+
   async getAllPlans(): Promise<Plan[]> {
     try {
       const plans = await this.planModel.find().exec();

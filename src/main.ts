@@ -1,14 +1,36 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import morgan from 'morgan';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { MESSAGES } from './common/utils/messages';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const port = 3000;
+
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
+  app.use(morgan('tiny'));
+
+  const config = new DocumentBuilder()
+    .setTitle('Perfido')
+    .setDescription('AUTH-MS API description')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  app.setGlobalPrefix('/api/v1/auth');
+  const document = SwaggerModule.createDocument(app, config);
+
+  SwaggerModule.setup('/api/v1/auth/api-docs', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix(MESSAGES.setUrl);
 
-  await app.listen(3000);
-  console.log('Server running on http://localhost:3000');
+  await app.listen(port);
+  console.log(`Application is running on: http://localhost: ${port}`);
 }
+
 bootstrap();
