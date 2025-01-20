@@ -14,10 +14,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       clientID: configService.get('GOOGLE_CLIENT_ID'),
       clientSecret: configService.get('GOOGLE_CLIENT_SECRET'),
       callbackURL: configService.get('GOOGLE_CALLBACK_URL'),
+
       scope: [
         'email',
         'profile',
-        'https://www.googleapis.com/auth/user.phonenumbers.read',
+        // 'https://www.googleapis.com/auth/user.phonenumbers.read',
       ],
     });
   }
@@ -28,16 +29,20 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     profile: any,
     done: VerifyCallback,
   ): Promise<any> {
+    console.log('Profile object:', profile);
+
     try {
       const { name, emails, photos, id } = profile;
 
       const user = {
-        UniqueId: id,
+        UniqueId: String(id),
         email: emails[0].value,
         full_name: name.givenName,
         photo: photos,
         accessToken: accessToken,
       };
+
+      console.log('User object:', user);
 
       return done(null, user);
     } catch (error) {

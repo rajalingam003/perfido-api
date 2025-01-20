@@ -25,7 +25,7 @@ import { MicrosoftStrategy } from './strategy/microsoftStrategy';
   controllers: [AuthController],
   providers: [
     AuthService,
-    // GoogleStrategy,
+    GoogleStrategy,
     // GithubStrategy,
     // MicrosoftStrategy,
   ],

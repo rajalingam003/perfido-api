@@ -95,7 +95,7 @@ export class UsersService {
     if (!isvalid) {
       throw new NotFoundException('Id is Invalid');
     }
-    const deleteUserDetails = await this.usersModel.findByIdAndUpdate(
+    const deleteUserDetails = await this.usersModel.findByIdAndDelete(
       id,
       reqBody,
     );
