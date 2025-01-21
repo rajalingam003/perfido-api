@@ -18,7 +18,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Perfido')
-    .setDescription('AUTH-MS API description')
+    .setDescription('API description')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
